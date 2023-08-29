@@ -31,7 +31,11 @@ app.get("/compose", (req, res) => {
   res.render("compose");
 });
 app.post("/compose", (req, res) => {
-  console.log(req.body.postTitle);
+  const obj = {
+    title: req.body.postTitle,
+    content: req.body.postContent,
+  };
+  console.log(obj);
   res.render("compose");
 });
 app.listen(3000, function () {
