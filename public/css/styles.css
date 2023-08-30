@@ -33,3 +33,12 @@
   font-size: 12px;
   color: #fff;
 }
+
+.read-more {
+  text-decoration: none;
+  color: #1abc9c;
+}
+.read-more:hover {
+  text-decoration: dashed;
+  color: lightblue;
+}

@@ -3,5 +3,10 @@
 <p><%=homeSContent%></p>
 <% postArray.forEach((obj)=>{ %>
 <h1><%=obj.title%></h1>
-<p><%=obj.content%></p>
+<p>
+  <%=obj.content.substring(0,100)%>...
+  <a class="read-more" href="/post/<%=obj.title.trim().replace(/\s/g, '%20')%>"
+    >Read More</a
+  >
+</p>
 <% }) %> <%- include("partials/footer"); -%>
