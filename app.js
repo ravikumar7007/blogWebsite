@@ -15,7 +15,7 @@ const post = mongoose.Schema({
   content: String,
 });
 const Post = mongoose.model("Post", post);
-const posts = [];
+
 const homeStartingContent =
   "Lacus vel facilisis volutpat est velit egestas dui id ornare. Semper auctor neque vitae tempus quam. Sit amet cursus sit amet dictum sit amet justo. Viverra tellus in hac habitasse. Imperdiet proin fermentum leo vel orci porta. Donec ultrices tincidunt arcu non sodales neque sodales ut. Mattis molestie a iaculis at erat pellentesque adipiscing. Magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Adipiscing elit ut aliquam purus sit amet luctus venenatis lectus. Ultrices vitae auctor eu augue ut lectus arcu bibendum at. Odio euismod lacinia at quis risus sed vulputate odio ut. Cursus mattis molestie a iaculis at erat pellentesque adipiscing.";
 const aboutContent =
@@ -30,7 +30,9 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  const posts = await Post.find({}).exec();
+
   res.render("home", {
     homeSContent: homeStartingContent,
     postArray: posts,
@@ -46,28 +48,22 @@ app.get("/compose", (req, res) => {
   res.render("compose");
 });
 
-app.post("/compose", (req, res) => {
+app.post("/compose", async (req, res) => {
   const obj = {
     title: req.body.postTitle,
     content: req.body.postContent,
   };
 
   const post = new Post(obj);
-  post.save();
+  await post.save();
 
-  posts.push(obj);
   res.redirect("/");
 });
 
-app.get("/post/:title", (req, res) => {
-  const reqTitle = req.params.title;
-  posts.forEach((post) => {
-    if (lodash.lowerCase(post.title) === lodash.lowerCase(reqTitle)) {
-      res.render("post", { obj: post });
-    } else {
-      console.log("Match Not Found");
-    }
-  });
+app.get("/post/:postId", async (req, res) => {
+  const postId = req.params.postId;
+  const post = await Post.findOne({ _id: postId }).exec();
+  res.render("post", { obj: post });
 });
 app.listen(3000, function () {
   console.log("Server started on port 3000");
